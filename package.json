@@ -2,6 +2,7 @@
 	"name": "tl-generator",
 	"displayName": "tl-generator",
 	"description": "",
+	"publisher": "hibi",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.52.0"
