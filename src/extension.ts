@@ -24,10 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
 			let all_range = new vscode.Selection(startPos, endPos);
 
 			let text = doc.getText(all_range)
-			let lines = text.split("\n")
+			let lines = text.split(/\r\n|\n/)
 			var result = "";
 			for (let line of lines){
-				let m = line.match(/(0|1):\d{2}　?$/)
+				let m = line.match(/[01]:\d{2}\s*?$/)
 				if (!m){
 					result += line + "\n"
 				}
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage("テキストファイルを選択してから実行してください")
 	}
 	});
-	
+
 
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(createcommand);
