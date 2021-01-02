@@ -64,8 +64,27 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 
+	let insertboss = vscode.commands.registerCommand('tl-generator.insert-boss', () => {
+		let editor = vscode.window.activeTextEditor; // エディタ取得
+		if (editor){
+			let doc = editor.document;
+			let cur_selection = editor.selection
+			let startPos = new vscode.Position(cur_selection.start.line, 0)
+			let endPos = new vscode.Position(cur_selection.start.line, 10000)
+			let range = new vscode.Range(startPos, endPos)
+			let text = doc.getText(range)
+			let result = "------" + text.trim() + " ボスUB------"
+			editor.edit(edit => {
+				edit.replace(range, result)
+			});
+		}else {
+			vscode.window.showInformationMessage("テキストファイルを選択してから実行してください")
+	}
+	});
+	
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(createcommand);
+	context.subscriptions.push(insertboss);
 }
 
 // this method is called when your extension is deactivated

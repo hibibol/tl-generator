@@ -1,9 +1,9 @@
 {
 	"name": "tl-generator",
-	"displayName": "tl-generator",
-	"description": "",
+	"displayName": "TL-Generator",
+	"description": "Princess Connect Re:Dive のクランバトルで使用するタイムライン作成補助ツール",
 	"publisher": "hibi",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.52.0"
 	},
@@ -12,7 +12,8 @@
 	],
 	"activationEvents": [
 		"onCommand:tl-generator.extract-timeline",
-		"onCommand:tl-generator.create-timeline-template"
+		"onCommand:tl-generator.create-timeline-template",
+		"onCommand:tl-generator.insert-boss"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -24,6 +25,24 @@
 			{
 				"command": "tl-generator.create-timeline-template",
 				"title": "TL-Generator: Create Timeline Template"
+			},
+			{
+				"command": "tl-generator.insert-boss",
+				"title": "TL-Generator: Insert Boss UB"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "tl-generator.insert-boss",
+				"key": "ctrl+alt+B"
+			},
+			{
+				"command": "tl-generator.extract-timeline",
+				"key": "ctrl+alt+E"
+			},
+			{
+				"command": "tl-generator.create-timeline-template",
+				"key": "ctrl+alt+T"
 			}
 		]
 	},
