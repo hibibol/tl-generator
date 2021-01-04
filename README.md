@@ -20,7 +20,10 @@ Princess Connect Re:Dive のクランバトルで使用するタイムライン�
 1. ボスUBを挿入したい時間の行にカーソルを合わせる。
 2. `F1` を押してコマンドパレットを開いて `TL-Generator: Insert Boss UB` を実行する。
 
+### 止めポイントのそう移入
 
+1. 止めポイントを挿入したいところにカーソルを合わせる。
+2. `F1` を押してコマンドパレットを開いて `TL-Generator: Insert Stop Point` を実行する。
 ## ショートカット
 
 デフォルトでは上記のコマンドが以下のショートカットキーで登録されています。
@@ -30,3 +33,4 @@ Princess Connect Re:Dive のクランバトルで使用するタイムライン�
 | `Create Timeline Template` | `Ctrl + Alt + T` |
 | `Extract Timeline` | `Ctrl + Alt + E` |
 | `Insert Boss UB` | `Ctrl + Alt + B`|
+| `Insert Stop Point` | `Ctrl + Alt + S`|

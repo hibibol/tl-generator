@@ -81,10 +81,25 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage("テキストファイルを選択してから実行してください")
 	}
 	});
+
+	let insertstop = vscode.commands.registerCommand('tl-generator.insert-stop-point', () => {
+		let editor = vscode.window.activeTextEditor; // エディタ取得
+		if (editor){
+			let cur_selection = editor.selection
+			let pos = new vscode.Position(cur_selection.start.line, 0)
+			let result = "！！！！！！！！ここで止めるッ！！！！！！！！\n"
+			editor.edit(edit => {
+				edit.insert(pos, result)
+			});
+		}else {
+			vscode.window.showInformationMessage("テキストファイルを選択してから実行してください")
+	}
+	});
 	
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(createcommand);
 	context.subscriptions.push(insertboss);
+	context.subscriptions.push(insertstop)
 }
 
 // this method is called when your extension is deactivated
