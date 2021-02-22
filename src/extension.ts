@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -97,6 +98,26 @@ function insert_char_name(char_number: number){
 	}else {
 		vscode.window.showInformationMessage("テキストファイルを選択してから実行してください")
 	}
+}
+
+async function check_exists_and_create_config_file(){
+	let wordkspaceFolders = vscode.workspace.workspaceFolders
+	if (wordkspaceFolders){
+		let rootpath = wordkspaceFolders[0].uri
+		if(!fs.existsSync(rootpath + "/.vscode")){
+			vscode.workspace.fs.createDirectory(vscode.Uri.joinPath(rootpath, "/.vscode"))
+		};
+		const wsedit = new vscode.WorkspaceEdit();
+		wsedit.createFile(vscode.Uri.joinPath(rootpath, "/.vscode/char_infos.json"), {ignoreIfExists: true})
+		let json_data = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(rootpath, "/.vscode/char_infos.json"))
+		try{
+			let readjson = JSON.parse(json_data.toString())
+			return readjson
+		}catch (e){
+			return {}
+		}
+	}
+
 }
 
 export function activate(context: vscode.ExtensionContext) {
