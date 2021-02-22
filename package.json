@@ -3,7 +3,7 @@
 	"displayName": "TL-Generator",
 	"description": "Princess Connect Re:Dive のクランバトルで使用するタイムライン作成補助ツール",
 	"publisher": "hibi",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.52.0"
 	},
@@ -14,8 +14,18 @@
 		"onCommand:tl-generator.extract-timeline",
 		"onCommand:tl-generator.create-timeline-template",
 		"onCommand:tl-generator.insert-boss",
-		"onCommand:tl-generator.insert-stop-point"
+		"onCommand:tl-generator.insert-stop-point",
+		"onCommand:tl-generator.add-time",
+		"onCommand:tl-generator.subtract-time",
+		"onCommand:tl-generator.insert-char1",
+		"onCommand:tl-generator.insert-char2",
+		"onCommand:tl-generator.insert-char3",
+		"onCommand:tl-generator.insert-char4",
+		"onCommand:tl-generator.insert-char5"
 	],
+	"repository": {
+		"url": "https://github.com/hibibol/tl-generator"
+	},
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
@@ -34,6 +44,18 @@
 			{
 				"command": "tl-generator.insert-stop-point",
 				"title": "TL-Generator: Insert Stop Point"
+			},
+			{
+				"command": "tl-generator.add-time",
+				"title": "TL-Generator: Add Time"
+			},
+			{
+				"command": "tl-generator.subtract-time",
+				"title": "TL-Generator: Subtract Time"
+			},
+			{
+				"command": "tl-generator.insert-char1",
+				"title": "TL-Generator: Insert Charcter 1"
 			}
 		],
 		"keybindings": [
@@ -52,6 +74,34 @@
 			{
 				"command": "tl-generator.insert-stop-point",
 				"key": "ctrl+alt+S"
+			},
+			{
+				"command": "tl-generator.add-time",
+				"key": "ctrl+alt+A"
+			},
+			{
+				"command": "tl-generator.subtract-time",
+				"key": "ctrl+alt+Z"
+			},
+			{
+				"command": "tl-generator.insert-char1",
+				"key": "ctrl+alt+1"
+			},
+			{
+				"command": "tl-generator.insert-char2",
+				"key": "ctrl+alt+2"
+			},
+			{
+				"command": "tl-generator.insert-char3",
+				"key": "ctrl+alt+3"
+			},
+			{
+				"command": "tl-generator.insert-char4",
+				"key": "ctrl+alt+4"
+			},
+			{
+				"command": "tl-generator.insert-char5",
+				"key": "ctrl+alt+5"
 			}
 		]
 	},
