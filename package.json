@@ -24,6 +24,7 @@
 		"onCommand:tl-generator.insert-char5",
 		"onCommand:tl-generator.carry-over-tl",
 		"onCommand:tl-generator.convert_battle_tl",
+		"onCommand:tl-generator.overwrite_battle_tl"
 	],
 	"repository": {
 		"url": "https://github.com/hibibol/tl-generator"
@@ -67,6 +68,9 @@
 				"command": "tl-generator.convert_battle_tl",
 				"title": "TL-Generator: Convert Battle TL"
 			},
+			{
+				"command": "tl-generator.overwrite_battle_tl",
+				"title": "バトルTLで上書き"
 			}
 		],
 		"keybindings": [
@@ -122,8 +126,19 @@
 				"command": "tl-generator.convert_battle_tl",
 				"key": "ctrl+alt+P"
 			},
+			{
+				"command": "tl-generator.overwrite_battle_tl",
+				"key": "ctrl+alt+V"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "tl-generator.overwrite_battle_tl",
+					"group": "9_cutcopypaste@500"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",

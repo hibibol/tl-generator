@@ -265,7 +265,7 @@ export function activate(context: vscode.ExtensionContext) {
         let endPos = new vscode.Position(cur_selection.start.line, 10000);
         let range = new vscode.Range(startPos, endPos);
         let text = doc.getText(range);
-        let result = "------" + text.trim() + " ボスUB------";
+        let result = "------ " + text.trim() + " ボスUB ------";
         editor.edit((edit) => {
           edit.replace(range, result);
         });
@@ -316,6 +316,33 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let overwrite_tl_command = vscode.commands.registerCommand(
+    "tl-generator.overwrite_battle_tl",
+    () => {
+      let editor = vscode.window.activeTextEditor;
+      if (editor) {
+        let all_range_data = utils.get_all_range_data(editor);
+        console.log("fuga");
+        vscode.env.clipboard.readText().then((text) => {
+          var battle_tl = convert_battle_tl(text);
+          console.log(battle_tl);
+          // 型推論が弱い....
+          if (editor) {
+            editor.edit((edit) => {
+              edit.replace(
+                all_range_data.all_range,
+                overwrite_battle_tl(all_range_data.text, battle_tl)
+              );
+            });
+          }
+        });
+      } else {
+        vscode.window.showErrorMessage(
+          "テキストファイルを選択してから実行してください"
+        );
+      }
+    }
+  );
   // TLの秒数を調整するコマンド
   let add_time = vscode.commands.registerCommand(
     "tl-generator.add-time",
@@ -380,6 +407,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(insert_char5);
   context.subscriptions.push(co_tl_command);
   context.subscriptions.push(convert_battle_tl_command);
+  context.subscriptions.push(overwrite_tl_command);
 }
 
 // this method is called when your extension is deactivated
