@@ -1,17 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import * as fs from "fs";
-
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
-function create_new_time(old_time: string, diff: number) {
-  var date = new Date(2020, 1, 1, 1, 1, 23);
-  date.setMinutes(Number(old_time.split(":")[0]));
-  date.setSeconds(Number(old_time.split(":")[1]) + diff);
-  return date.getMinutes() + ":" + ("00" + date.getSeconds()).slice(-2);
-}
+import * as utils from "./utils";
 
 function calculate_time_command(diff: number, head: Boolean = true) {
   let editor = vscode.window.activeTextEditor;
@@ -87,14 +80,10 @@ function get_char_names_list_from_tl(timeline: string) {
 function insert_char_name(char_number: number) {
   let editor = vscode.window.activeTextEditor; // エディタ取得
   if (editor) {
-    let doc = editor.document;
     let cur_selection = editor.selection;
-    let startPos = new vscode.Position(0, 0);
-    let endPos = new vscode.Position(doc.lineCount - 1, 10000);
-    let all_range = new vscode.Selection(startPos, endPos);
+    let all_range_data = utils.get_all_range_data(editor);
 
-    let text = doc.getText(all_range);
-    let char_list = get_char_names_list_from_tl(text);
+    let char_list = get_char_names_list_from_tl(all_range_data.text);
     editor.edit((edit) => {
       edit.insert(cur_selection.active, char_list[char_number - 1]);
     });
@@ -102,32 +91,6 @@ function insert_char_name(char_number: number) {
     vscode.window.showErrorMessage(
       "テキストファイルを選択してから実行してください"
     );
-  }
-}
-
-async function check_exists_and_create_config_file() {
-  let wordkspaceFolders = vscode.workspace.workspaceFolders;
-  if (wordkspaceFolders) {
-    let rootpath = wordkspaceFolders[0].uri;
-    if (!fs.existsSync(rootpath + "/.vscode")) {
-      vscode.workspace.fs.createDirectory(
-        vscode.Uri.joinPath(rootpath, "/.vscode")
-      );
-    }
-    const wsedit = new vscode.WorkspaceEdit();
-    wsedit.createFile(
-      vscode.Uri.joinPath(rootpath, "/.vscode/char_infos.json"),
-      { ignoreIfExists: true }
-    );
-    let json_data = await vscode.workspace.fs.readFile(
-      vscode.Uri.joinPath(rootpath, "/.vscode/char_infos.json")
-    );
-    try {
-      let readjson = JSON.parse(json_data.toString());
-      return readjson;
-    } catch (e) {
-      return {};
-    }
   }
 }
 
@@ -145,14 +108,8 @@ export function activate(context: vscode.ExtensionContext) {
       // The code you place here will be executed every time your command is executed
       let editor = vscode.window.activeTextEditor; // エディタ取得
       if (editor) {
-        let doc = editor.document;
-
-        let startPos = new vscode.Position(0, 0);
-        let endPos = new vscode.Position(doc.lineCount - 1, 10000);
-        let all_range = new vscode.Selection(startPos, endPos);
-
-        let text = doc.getText(all_range);
-        let lines = text.split(/\r\n|\n/);
+        let all_range_data = utils.get_all_range_data(editor);
+        let lines = all_range_data.text.split(/\r\n|\n/);
         var result = "";
         for (let line of lines) {
           let m = line.match(/[01]:\d{2}\s*?$/);
@@ -161,7 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
         }
         editor.edit((edit) => {
-          edit.replace(all_range, result);
+          edit.replace(all_range_data.all_range, result);
         });
         vscode.window.showInformationMessage("TLの抽出が完了しました");
       } else {
@@ -209,10 +166,7 @@ export function activate(context: vscode.ExtensionContext) {
           result += "　" + char_info[4] + "\n";
         }
 
-        let doc = editor.document;
-        let startPos = new vscode.Position(0, 0);
-        let endPos = new vscode.Position(doc.lineCount - 1, 10000);
-        let all_range = new vscode.Selection(startPos, endPos);
+        let all_range_data = utils.get_all_range_data(editor);
 
         var date = new Date(2020, 1, 1, 1, 1, 23);
         for (let i = 0; i < 83; i++) {
@@ -225,7 +179,7 @@ export function activate(context: vscode.ExtensionContext) {
           date.setSeconds(date.getSeconds() - 1);
         }
         editor.edit((edit) => {
-          edit.replace(all_range, result);
+          edit.replace(all_range_data.all_range, result);
         });
       } else {
         vscode.window.showErrorMessage(
