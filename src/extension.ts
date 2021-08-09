@@ -5,6 +5,7 @@ import * as vscode from "vscode";
 // your extension is activated the very first time the command is executed
 
 import * as utils from "./utils";
+import { get_new_seconds, seconds_to_str } from "./hundle_time";
 
 function calculate_time_command(diff: number, head: Boolean = true) {
   let editor = vscode.window.activeTextEditor;
@@ -19,13 +20,75 @@ function calculate_time_command(diff: number, head: Boolean = true) {
     if (m) {
       let last_index = head ? 1 : m.length;
       for (let i = 0; i < last_index; i++) {
-        let new_time = create_new_time(m[0], diff);
+        let new_time = seconds_to_str(get_new_seconds(m[0], diff));
         let new_text = text.replace(m[0], new_time);
         editor.edit((edit) => {
           edit.replace(range, new_text);
         });
       }
     }
+  }
+}
+
+function create_carry_over_tl(original_tl: string, carry_over_time: number) {
+  let lines = original_tl.split(/\r\n|\n/);
+  var time_over_flag = false;
+  var result = "";
+  let diff = carry_over_time - 90;
+  for (let line of lines) {
+    let matchs = line.match(/0?[01]:\d{2}/);
+    if (matchs) {
+      var new_seconds = get_new_seconds(matchs[0], diff);
+      if (new_seconds <= 0 && !time_over_flag) {
+        result += "\n===== TIME UP =====\n\n";
+        time_over_flag = true;
+      }
+      if (new_seconds < -10) {
+        break;
+      }
+      matchs.forEach((m) => {
+        line = line.replace(m, seconds_to_str(get_new_seconds(m, diff)));
+      });
+    }
+    result += line + "\n";
+  }
+  return result;
+}
+
+async function create_carry_over_tl_file() {
+  let editor = vscode.window.activeTextEditor; // エディタ取得
+  if (!editor) {
+    vscode.window.showErrorMessage(
+      "テキストファイルを選択してから実行してください"
+    );
+    return;
+  }
+
+  let carry_over_time_str = await vscode.window.showInputBox({
+    prompt: "持ち越し秒数を入力してください(半角数字)",
+  });
+  if (!carry_over_time_str) {
+    vscode.window.showErrorMessage("持ち越しTL作成を中止します");
+    return;
+  }
+
+  let all_range_data = utils.get_all_range_data(editor);
+  let new_tl = create_carry_over_tl(
+    all_range_data.text,
+    Number(carry_over_time_str)
+  );
+  let name = editor.document.fileName.split("/").pop();
+  if (name) {
+    let new_name =
+      name.split(".")[0] + "_持ち越し" + carry_over_time_str + "秒.tl";
+    let new_file_uri = vscode.Uri.joinPath(editor.document.uri, "..", new_name);
+    vscode.workspace.fs
+      .writeFile(new_file_uri, new TextEncoder().encode(new_tl))
+      .then((_) => {
+        vscode.commands.executeCommand("vscode.open", new_file_uri);
+      });
+  } else {
+    vscode.window.showErrorMessage("エラーが発生しました");
   }
 }
 
@@ -276,6 +339,12 @@ export function activate(context: vscode.ExtensionContext) {
       insert_char_name(5);
     }
   );
+  let co_tl_command = vscode.commands.registerCommand(
+    "tl-generator.carry-over-tl",
+    async () => {
+      await create_carry_over_tl_file();
+    }
+  );
   context.subscriptions.push(disposable);
   context.subscriptions.push(createcommand);
   context.subscriptions.push(insertboss);
@@ -287,6 +356,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(insert_char3);
   context.subscriptions.push(insert_char4);
   context.subscriptions.push(insert_char5);
+  context.subscriptions.push(co_tl_command);
 }
 
 // this method is called when your extension is deactivated

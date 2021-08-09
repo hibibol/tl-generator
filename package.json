@@ -21,7 +21,8 @@
 		"onCommand:tl-generator.insert-char2",
 		"onCommand:tl-generator.insert-char3",
 		"onCommand:tl-generator.insert-char4",
-		"onCommand:tl-generator.insert-char5"
+		"onCommand:tl-generator.insert-char5",
+		"onCommand:tl-generator.carry-over-tl",
 	],
 	"repository": {
 		"url": "https://github.com/hibibol/tl-generator"
@@ -56,6 +57,11 @@
 			{
 				"command": "tl-generator.insert-char1",
 				"title": "TL-Generator: Insert Charcter 1"
+			},
+			{
+				"command": "tl-generator.carry-over-tl",
+				"title": "TL-Generator: Create Carry Over Timeline"
+			},
 			}
 		],
 		"keybindings": [
@@ -102,6 +108,11 @@
 			{
 				"command": "tl-generator.insert-char5",
 				"key": "ctrl+alt+5"
+			},
+			{
+				"command": "tl-generator.carry-over-tl",
+				"key": "ctrl+alt+C"
+			},
 			}
 		]
 	},
