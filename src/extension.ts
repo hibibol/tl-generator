@@ -322,10 +322,8 @@ export function activate(context: vscode.ExtensionContext) {
       let editor = vscode.window.activeTextEditor;
       if (editor) {
         let all_range_data = utils.get_all_range_data(editor);
-        console.log("fuga");
         vscode.env.clipboard.readText().then((text) => {
           var battle_tl = convert_battle_tl(text);
-          console.log(battle_tl);
           // 型推論が弱い....
           if (editor) {
             editor.edit((edit) => {

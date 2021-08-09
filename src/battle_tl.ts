@@ -130,7 +130,6 @@ export function overwrite_battle_tl(old_tl: string, new_tl: string) {
           !is_same_line_data(new_tl_line_data, line_data)
         ) {
           result += line_data_to_string(new_tl_line_data, now) + "\n";
-          console.log(is_same_line_data(new_tl_line_data, line_data));
           now = new_tl_line_data.time;
           new_tl_index++;
           new_tl_line_data = new_tl_data[new_tl_index];
@@ -193,7 +192,6 @@ function convert_battle_tl(battle_tl: string) {
         char_name.length > max_char_length ? char_name.length : max_char_length;
       char_infos.push([char_name, char_info_match[2], char_info_match[4]]);
     } else if (damage_match) {
-      console.log(damage_match);
       result += damage_match[1].slice(0, -4) + "万";
     }
   }
