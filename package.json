@@ -3,7 +3,7 @@
 	"displayName": "TL-Generator",
 	"description": "Princess Connect Re:Dive のクランバトルで使用するタイムライン作成補助ツール",
 	"publisher": "hibi",
-	"version": "0.0.4",
+	"version": "0.2.0",
 	"engines": {
 		"vscode": "^1.52.0"
 	},
@@ -14,8 +14,21 @@
 		"onCommand:tl-generator.extract-timeline",
 		"onCommand:tl-generator.create-timeline-template",
 		"onCommand:tl-generator.insert-boss",
-		"onCommand:tl-generator.insert-stop-point"
+		"onCommand:tl-generator.insert-stop-point",
+		"onCommand:tl-generator.add-time",
+		"onCommand:tl-generator.subtract-time",
+		"onCommand:tl-generator.insert-char1",
+		"onCommand:tl-generator.insert-char2",
+		"onCommand:tl-generator.insert-char3",
+		"onCommand:tl-generator.insert-char4",
+		"onCommand:tl-generator.insert-char5",
+		"onCommand:tl-generator.carry-over-tl",
+		"onCommand:tl-generator.convert_battle_tl",
+		"onCommand:tl-generator.overwrite_battle_tl"
 	],
+	"repository": {
+		"url": "https://github.com/hibibol/tl-generator"
+	},
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
@@ -34,6 +47,30 @@
 			{
 				"command": "tl-generator.insert-stop-point",
 				"title": "TL-Generator: Insert Stop Point"
+			},
+			{
+				"command": "tl-generator.add-time",
+				"title": "TL-Generator: Add Time"
+			},
+			{
+				"command": "tl-generator.subtract-time",
+				"title": "TL-Generator: Subtract Time"
+			},
+			{
+				"command": "tl-generator.insert-char1",
+				"title": "TL-Generator: Insert Charcter 1"
+			},
+			{
+				"command": "tl-generator.carry-over-tl",
+				"title": "TL-Generator: Create Carry Over Timeline"
+			},
+			{
+				"command": "tl-generator.convert_battle_tl",
+				"title": "TL-Generator: Convert Battle TL"
+			},
+			{
+				"command": "tl-generator.overwrite_battle_tl",
+				"title": "バトルTLで上書き"
 			}
 		],
 		"keybindings": [
@@ -52,8 +89,56 @@
 			{
 				"command": "tl-generator.insert-stop-point",
 				"key": "ctrl+alt+S"
+			},
+			{
+				"command": "tl-generator.add-time",
+				"key": "ctrl+alt+A"
+			},
+			{
+				"command": "tl-generator.subtract-time",
+				"key": "ctrl+alt+Z"
+			},
+			{
+				"command": "tl-generator.insert-char1",
+				"key": "ctrl+alt+1"
+			},
+			{
+				"command": "tl-generator.insert-char2",
+				"key": "ctrl+alt+2"
+			},
+			{
+				"command": "tl-generator.insert-char3",
+				"key": "ctrl+alt+3"
+			},
+			{
+				"command": "tl-generator.insert-char4",
+				"key": "ctrl+alt+4"
+			},
+			{
+				"command": "tl-generator.insert-char5",
+				"key": "ctrl+alt+5"
+			},
+			{
+				"command": "tl-generator.carry-over-tl",
+				"key": "ctrl+alt+C"
+			},
+			{
+				"command": "tl-generator.convert_battle_tl",
+				"key": "ctrl+alt+P"
+			},
+			{
+				"command": "tl-generator.overwrite_battle_tl",
+				"key": "ctrl+alt+V"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "tl-generator.overwrite_battle_tl",
+					"group": "9_cutcopypaste@500"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
@@ -67,18 +152,22 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.52.0",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.0.4",
 		"@types/node": "^12.11.7",
-		"eslint": "^7.15.0",
-		"@typescript-eslint/eslint-plugin": "^4.9.0",
-		"@typescript-eslint/parser": "^4.9.0",
+		"@types/vscode": "^1.52.0",
+		"@typescript-eslint/eslint-plugin": "^4.29.0",
+		"@typescript-eslint/parser": "^4.29.0",
+		"eslint": "^7.32.0",
+		"eslint-config-google": "^0.14.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.0",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
+		"prettier": "^2.3.2",
+		"ts-loader": "^8.0.11",
 		"typescript": "^4.1.2",
 		"vscode-test": "^1.4.1",
-		"ts-loader": "^8.0.11",
 		"webpack": "^5.10.0",
 		"webpack-cli": "^4.2.0"
 	}

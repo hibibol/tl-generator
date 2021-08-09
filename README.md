@@ -1,36 +1,43 @@
 # TL-Generator README
 
-Princess Connect Re:Dive のクランバトルで使用するタイムラインの作成を補助するツール
+Princess Connect Re:Dive のクランバトルで使用するタイムライン(TL)の作成を補助するツール
+
+## 機能
+
+主に以下のことが出来ます。
+
+- 持ち越し TL の作成
+- バトル TL を見やすく変換
+- 既存 TL を新しいバトル TL で上書き (差分があるものだけ書き換えます)
+- ちょっとした注釈を付ける際の補助機能
+  - 止めポイントの挿入
+
+以下のことも出来ますが、バトル TL をコピペ出来るようになったので出番はほぼないです
+
+- TL テンプレートの作成
+- テンプレートから TL 抽出
+- ボス UB の挿入
+- 秒数を減らす・増やす
+- キャラの自動入力
 
 ## 使い方
 
-### テンプレートファイルの作成
+`F1` を押すと出てくるコマンドパレットから各コマンドを実行してもいいですが、ショートカットキーを使用したほうが便利です。
+`バトルTLで上書き`は右クリックからも実行することも可能です。
 
-1. あらかじめ空のテキストファイルを作成して開いておく。
-2. `F1` を押してコマンドパレットを開いて `TL-Generator: Create Timeline Template` を実行する。
-
-### ライムライン抽出
-
-1. あらかじめ作成したテンプレートにUBタイミングに合わせたキャラ名を書いておく。
-2. `F1` を押してコマンドパレットを開いて `TL-Generator: Extract Timeline` を実行する。
-
-
-### ボスUBの挿入
-
-1. ボスUBを挿入したい時間の行にカーソルを合わせる。
-2. `F1` を押してコマンドパレットを開いて `TL-Generator: Insert Boss UB` を実行する。
-
-### 止めポイントのそう移入
-
-1. 止めポイントを挿入したいところにカーソルを合わせる。
-2. `F1` を押してコマンドパレットを開いて `TL-Generator: Insert Stop Point` を実行する。
-## ショートカット
+### ショートカット
 
 デフォルトでは上記のコマンドが以下のショートカットキーで登録されています。
 
-| コマンド | ショートカットキー|
-| ---- | ---- |
-| `Create Timeline Template` | `Ctrl + Alt + T` |
-| `Extract Timeline` | `Ctrl + Alt + E` |
-| `Insert Boss UB` | `Ctrl + Alt + B`|
-| `Insert Stop Point` | `Ctrl + Alt + S`|
+| コマンド                     | ショートカットキー       | 機能                                                     |
+| ---------------------------- | ------------------------ | -------------------------------------------------------- |
+| `Create Carry Over Timeline` | `Ctrl + Alt + C`         | 持ち越し TL の作成                                       |
+| `Convert Battle TL`          | `Ctrl + Alt + P`         | バトル TL を見やすく変換                                 |
+| `バトルTLで上書き`           | `Ctrl + Alt + V`         | 既存 TL をクリップボードに保存したバトル TL で上書きする |
+| `Insert Stop Point`          | `Ctrl + Alt + S`         | 止めポイントを挿入する                                   |
+| `Create Timeline Template`   | `Ctrl + Alt + T`         | TL のテンプレートを作成する                              |
+| `Extract Timeline`           | `Ctrl + Alt + E`         | テンプレートから TL を抽出する                           |
+| `Insert Boss UB`             | `Ctrl + Alt + B`         | ボス UB を挿入する                                       |
+| `Add Time`                   | `Ctrl + Alt + A`         | 秒数を増やす                                             |
+| `Subtract Time`              | `Ctrl + Alt + Z`         | 秒数を減らす                                             |
+|                              | `Ctrl + Alt + 数字[1-5]` | 対応した番号のキャラを自動入力する                       |

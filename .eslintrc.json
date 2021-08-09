@@ -8,12 +8,17 @@
     "plugins": [
         "@typescript-eslint"
     ],
+    "extends": [
+        "plugin:prettier/recommended"
+    ],
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
+        "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": "off",
+        "@typescript-eslint/camelcase": "off"
     }
+
 }
