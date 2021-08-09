@@ -5,7 +5,9 @@ import * as vscode from "vscode";
 // your extension is activated the very first time the command is executed
 
 import * as utils from "./utils";
+import { TextEncoder } from "util";
 import { get_new_seconds, seconds_to_str } from "./hundle_time";
+import { convert_battle_tl, overwrite_battle_tl } from "./battle_tl";
 
 function calculate_time_command(diff: number, head: Boolean = true) {
   let editor = vscode.window.activeTextEditor;
@@ -294,6 +296,26 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let convert_battle_tl_command = vscode.commands.registerCommand(
+    "tl-generator.convert_battle_tl",
+    () => {
+      let editor = vscode.window.activeTextEditor;
+      if (editor) {
+        let all_range_data = utils.get_all_range_data(editor);
+        editor.edit((edit) => {
+          edit.replace(
+            all_range_data.all_range,
+            convert_battle_tl(all_range_data.text)
+          );
+        });
+      } else {
+        vscode.window.showErrorMessage(
+          "テキストファイルを選択してから実行してください"
+        );
+      }
+    }
+  );
+
   // TLの秒数を調整するコマンド
   let add_time = vscode.commands.registerCommand(
     "tl-generator.add-time",
@@ -357,6 +379,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(insert_char4);
   context.subscriptions.push(insert_char5);
   context.subscriptions.push(co_tl_command);
+  context.subscriptions.push(convert_battle_tl_command);
 }
 
 // this method is called when your extension is deactivated
