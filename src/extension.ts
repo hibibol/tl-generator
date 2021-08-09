@@ -131,7 +131,7 @@ function get_char_names_list_from_tl(timeline: string) {
   let lines = timeline.split(/\r\n|\n/);
   var char_list: string[] = [];
   for (let line of lines) {
-    let m = line.match(/^\S+\s+星\dR\d/);
+    let m = line.match(/^\S+\s+星\d\s*R\d/);
     if (m) {
       char_list.push(line.split(/\s/)[0]);
       if (char_list.length === 5) {
