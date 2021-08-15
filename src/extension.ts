@@ -319,20 +319,17 @@ export function activate(context: vscode.ExtensionContext) {
   let overwrite_tl_command = vscode.commands.registerCommand(
     "tl-generator.overwrite_battle_tl",
     () => {
-      let editor = vscode.window.activeTextEditor;
+      const editor = vscode.window.activeTextEditor;
       if (editor) {
         let all_range_data = utils.get_all_range_data(editor);
         vscode.env.clipboard.readText().then((text) => {
           var battle_tl = convert_battle_tl(text);
-          // 型推論が弱い....
-          if (editor) {
-            editor.edit((edit) => {
-              edit.replace(
-                all_range_data.all_range,
-                overwrite_battle_tl(all_range_data.text, battle_tl)
-              );
-            });
-          }
+          editor.edit((edit) => {
+            edit.replace(
+              all_range_data.all_range,
+              overwrite_battle_tl(all_range_data.text, battle_tl)
+            );
+          });
         });
       } else {
         vscode.window.showErrorMessage(

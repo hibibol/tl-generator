@@ -111,9 +111,9 @@ export function overwrite_battle_tl(old_tl: string, new_tl: string) {
   });
   let new_tl_index = 0;
   let now = "";
-
+  let written_line_data: LineData[] = [];
   for (let i = 0; i < old_tl_lines.length; i++) {
-    let line_data = get_line_data_by_index(i, old_tl_data);
+    const line_data = get_line_data_by_index(i, old_tl_data);
     // TLと関係ないところはそのままにする
     if (!line_data) {
       result += old_tl_lines[i] + "\n";
@@ -132,12 +132,23 @@ export function overwrite_battle_tl(old_tl: string, new_tl: string) {
           result += line_data_to_string(new_tl_line_data, now) + "\n";
           now = new_tl_line_data.time;
           new_tl_index++;
+          written_line_data.push(new_tl_line_data);
           new_tl_line_data = new_tl_data[new_tl_index];
         }
-
-        result += line_data_to_string(line_data, now) + "\n";
-        now = line_data.time;
-        new_tl_index++;
+        // 同じ秒数で既に記載がされていない場合はこれを追記する
+        if (
+          new_tl_data.filter((new_tl_line_data) => {
+            return is_same_line_data(new_tl_line_data, line_data);
+          }).length >
+          written_line_data.filter((w_line_data) => {
+            return is_same_line_data(w_line_data, line_data);
+          }).length
+        ) {
+          result += line_data_to_string(line_data, now) + "\n";
+          now = line_data.time;
+          new_tl_index++;
+          written_line_data.push(line_data);
+        }
       }
     }
   }
