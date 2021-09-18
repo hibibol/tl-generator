@@ -60,9 +60,7 @@ function create_carry_over_tl(original_tl: string, carry_over_time: number) {
 async function create_carry_over_tl_file() {
   let editor = vscode.window.activeTextEditor; // エディタ取得
   if (!editor) {
-    vscode.window.showErrorMessage(
-      "テキストファイルを選択してから実行してください"
-    );
+    vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
     return;
   }
 
@@ -75,20 +73,17 @@ async function create_carry_over_tl_file() {
   }
 
   let all_range_data = utils.get_all_range_data(editor);
-  let new_tl = create_carry_over_tl(
-    all_range_data.text,
-    Number(carry_over_time_str)
-  );
+  let new_tl = create_carry_over_tl(all_range_data.text, Number(carry_over_time_str));
   let name = editor.document.fileName.split("/").pop();
   if (name) {
-    let new_name =
-      name.split(".")[0] + "_持ち越し" + carry_over_time_str + "秒.tl";
+    let new_name = name.split(".")[0] + "_持ち越し" + carry_over_time_str + "秒.tl";
     let new_file_uri = vscode.Uri.joinPath(editor.document.uri, "..", new_name);
-    vscode.workspace.fs
-      .writeFile(new_file_uri, new TextEncoder().encode(new_tl))
-      .then((_) => {
-        vscode.commands.executeCommand("vscode.open", new_file_uri);
-      });
+    vscode.window.showInformationMessage(
+      "editor.document.uri: " + editor.document.uri + "\nnew_file_uri: " + new_file_uri
+    );
+    vscode.workspace.fs.writeFile(new_file_uri, new TextEncoder().encode(new_tl)).then((_) => {
+      vscode.commands.executeCommand("vscode.open", new_file_uri);
+    });
   } else {
     vscode.window.showErrorMessage("エラーが発生しました");
   }
@@ -153,9 +148,7 @@ function insert_char_name(char_number: number) {
       edit.insert(cur_selection.active, char_list[char_number - 1]);
     });
   } else {
-    vscode.window.showErrorMessage(
-      "テキストファイルを選択してから実行してください"
-    );
+    vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
   }
 }
 
@@ -167,32 +160,27 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // // Now provide the implementation of the command with registerCommand
   // // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
-    "tl-generator.extract-timeline",
-    () => {
-      // The code you place here will be executed every time your command is executed
-      let editor = vscode.window.activeTextEditor; // エディタ取得
-      if (editor) {
-        let all_range_data = utils.get_all_range_data(editor);
-        let lines = all_range_data.text.split(/\r\n|\n/);
-        var result = "";
-        for (let line of lines) {
-          let m = line.match(/[01]:\d{2}\s*?$/);
-          if (!m) {
-            result += line + "\n";
-          }
+  let disposable = vscode.commands.registerCommand("tl-generator.extract-timeline", () => {
+    // The code you place here will be executed every time your command is executed
+    let editor = vscode.window.activeTextEditor; // エディタ取得
+    if (editor) {
+      let all_range_data = utils.get_all_range_data(editor);
+      let lines = all_range_data.text.split(/\r\n|\n/);
+      var result = "";
+      for (let line of lines) {
+        let m = line.match(/[01]:\d{2}\s*?$/);
+        if (!m) {
+          result += line + "\n";
         }
-        editor.edit((edit) => {
-          edit.replace(all_range_data.all_range, result);
-        });
-        vscode.window.showInformationMessage("TLの抽出が完了しました");
-      } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
       }
+      editor.edit((edit) => {
+        edit.replace(all_range_data.all_range, result);
+      });
+      vscode.window.showInformationMessage("TLの抽出が完了しました");
+    } else {
+      vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
     }
-  );
+  });
 
   let createcommand = vscode.commands.registerCommand(
     "tl-generator.create-timeline-template",
@@ -221,10 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
             "R" +
             char_info[2];
           if (char_info[3]) {
-            result +=
-              "専用" +
-              char_info[3] +
-              " ".repeat(max_equip_length - char_info[3].length);
+            result += "専用" + char_info[3] + " ".repeat(max_equip_length - char_info[3].length);
           } else {
             result += "　　" + " ".repeat(max_equip_length);
           }
@@ -235,66 +220,49 @@ export function activate(context: vscode.ExtensionContext) {
 
         var date = new Date(2020, 1, 1, 1, 1, 23);
         for (let i = 0; i < 83; i++) {
-          result +=
-            "\n" +
-            date.getMinutes() +
-            ":" +
-            ("00" + date.getSeconds()).slice(-2) +
-            "　";
+          result += "\n" + date.getMinutes() + ":" + ("00" + date.getSeconds()).slice(-2) + "　";
           date.setSeconds(date.getSeconds() - 1);
         }
         editor.edit((edit) => {
           edit.replace(all_range_data.all_range, result);
         });
       } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
+        vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
       }
     }
   );
 
-  let insertboss = vscode.commands.registerCommand(
-    "tl-generator.insert-boss",
-    () => {
-      let editor = vscode.window.activeTextEditor; // エディタ取得
-      if (editor) {
-        let doc = editor.document;
-        let cur_selection = editor.selection;
-        let startPos = new vscode.Position(cur_selection.start.line, 0);
-        let endPos = new vscode.Position(cur_selection.start.line, 10000);
-        let range = new vscode.Range(startPos, endPos);
-        let text = doc.getText(range);
-        let result = "------ " + text.trim() + " ボスUB ------";
-        editor.edit((edit) => {
-          edit.replace(range, result);
-        });
-      } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
-      }
+  let insertboss = vscode.commands.registerCommand("tl-generator.insert-boss", () => {
+    let editor = vscode.window.activeTextEditor; // エディタ取得
+    if (editor) {
+      let doc = editor.document;
+      let cur_selection = editor.selection;
+      let startPos = new vscode.Position(cur_selection.start.line, 0);
+      let endPos = new vscode.Position(cur_selection.start.line, 10000);
+      let range = new vscode.Range(startPos, endPos);
+      let text = doc.getText(range);
+      let result = "------ " + text.trim() + " ボスUB ------";
+      editor.edit((edit) => {
+        edit.replace(range, result);
+      });
+    } else {
+      vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
     }
-  );
+  });
 
-  let insertstop = vscode.commands.registerCommand(
-    "tl-generator.insert-stop-point",
-    () => {
-      let editor = vscode.window.activeTextEditor; // エディタ取得
-      if (editor) {
-        let cur_selection = editor.selection;
-        let pos = new vscode.Position(cur_selection.start.line, 0);
-        let result = "！！！！！！！！ここで止めるッ！！！！！！！！\n";
-        editor.edit((edit) => {
-          edit.insert(pos, result);
-        });
-      } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
-      }
+  let insertstop = vscode.commands.registerCommand("tl-generator.insert-stop-point", () => {
+    let editor = vscode.window.activeTextEditor; // エディタ取得
+    if (editor) {
+      let cur_selection = editor.selection;
+      let pos = new vscode.Position(cur_selection.start.line, 0);
+      let result = "！！！！！！！！ここで止めるッ！！！！！！！！\n";
+      editor.edit((edit) => {
+        edit.insert(pos, result);
+      });
+    } else {
+      vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
     }
-  );
+  });
 
   let convert_battle_tl_command = vscode.commands.registerCommand(
     "tl-generator.convert_battle_tl",
@@ -303,15 +271,10 @@ export function activate(context: vscode.ExtensionContext) {
       if (editor) {
         let all_range_data = utils.get_all_range_data(editor);
         editor.edit((edit) => {
-          edit.replace(
-            all_range_data.all_range,
-            convert_battle_tl(all_range_data.text)
-          );
+          edit.replace(all_range_data.all_range, convert_battle_tl(all_range_data.text));
         });
       } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
+        vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
       }
     }
   );
@@ -332,63 +295,37 @@ export function activate(context: vscode.ExtensionContext) {
           });
         });
       } else {
-        vscode.window.showErrorMessage(
-          "テキストファイルを選択してから実行してください"
-        );
+        vscode.window.showErrorMessage("テキストファイルを選択してから実行してください");
       }
     }
   );
   // TLの秒数を調整するコマンド
-  let add_time = vscode.commands.registerCommand(
-    "tl-generator.add-time",
-    () => {
-      calculate_time_command(1);
-    }
-  );
+  let add_time = vscode.commands.registerCommand("tl-generator.add-time", () => {
+    calculate_time_command(1);
+  });
 
-  let subtract_time = vscode.commands.registerCommand(
-    "tl-generator.subtract-time",
-    () => {
-      calculate_time_command(-1);
-    }
-  );
+  let subtract_time = vscode.commands.registerCommand("tl-generator.subtract-time", () => {
+    calculate_time_command(-1);
+  });
 
-  let insert_char1 = vscode.commands.registerCommand(
-    "tl-generator.insert-char1",
-    () => {
-      insert_char_name(1);
-    }
-  );
-  let insert_char2 = vscode.commands.registerCommand(
-    "tl-generator.insert-char2",
-    () => {
-      insert_char_name(2);
-    }
-  );
-  let insert_char3 = vscode.commands.registerCommand(
-    "tl-generator.insert-char3",
-    () => {
-      insert_char_name(3);
-    }
-  );
-  let insert_char4 = vscode.commands.registerCommand(
-    "tl-generator.insert-char4",
-    () => {
-      insert_char_name(4);
-    }
-  );
-  let insert_char5 = vscode.commands.registerCommand(
-    "tl-generator.insert-char5",
-    () => {
-      insert_char_name(5);
-    }
-  );
-  let co_tl_command = vscode.commands.registerCommand(
-    "tl-generator.carry-over-tl",
-    async () => {
-      await create_carry_over_tl_file();
-    }
-  );
+  let insert_char1 = vscode.commands.registerCommand("tl-generator.insert-char1", () => {
+    insert_char_name(1);
+  });
+  let insert_char2 = vscode.commands.registerCommand("tl-generator.insert-char2", () => {
+    insert_char_name(2);
+  });
+  let insert_char3 = vscode.commands.registerCommand("tl-generator.insert-char3", () => {
+    insert_char_name(3);
+  });
+  let insert_char4 = vscode.commands.registerCommand("tl-generator.insert-char4", () => {
+    insert_char_name(4);
+  });
+  let insert_char5 = vscode.commands.registerCommand("tl-generator.insert-char5", () => {
+    insert_char_name(5);
+  });
+  let co_tl_command = vscode.commands.registerCommand("tl-generator.carry-over-tl", async () => {
+    await create_carry_over_tl_file();
+  });
   context.subscriptions.push(disposable);
   context.subscriptions.push(createcommand);
   context.subscriptions.push(insertboss);

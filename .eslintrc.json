@@ -18,7 +18,12 @@
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
         "semi": "off",
-        "@typescript-eslint/camelcase": "off"
+        "@typescript-eslint/camelcase": "off",
+        "max-len": "off",
+        "prettier/prettier": [
+            "error",
+            {"printWidth": 100}
+        ]
     }
 
 }

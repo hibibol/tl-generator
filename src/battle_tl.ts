@@ -30,9 +30,7 @@ function get_line_data_by_index(index: number, tl_data: LineData[]) {
 }
 
 function is_same_line_data(line_data1: LineData, line_data2: LineData) {
-  return (
-    line_data1.time === line_data2.time && line_data1.char === line_data2.char
-  );
+  return line_data1.time === line_data2.time && line_data1.char === line_data2.char;
 }
 
 function line_data_to_string(line_data: LineData, former_time: string) {
@@ -54,9 +52,7 @@ function extract_tl_data(tl_lines: string[]) {
   tl_lines.forEach((line, index) => {
     let time_match = line.match(/^([01]:\d{2})\s+(?<char>\S+)\s?(?<info>.+)?/);
     let same_time_match = line.match(/^\s+(?<char>\S+)\s?(?<info>.+)?/);
-    let boss_match = line.match(
-      /^------\s?([01]:\d{2})\s?ボスUB\s?------\s?(?<info>.+)?/
-    );
+    let boss_match = line.match(/^------\s?([01]:\d{2})\s?ボスUB\s?------\s?(?<info>.+)?/);
     if (time_match) {
       // なんか冗長だけど
       if (time_match.groups) {
@@ -99,9 +95,7 @@ export function overwrite_battle_tl(old_tl: string, new_tl: string) {
   let new_tl_data = extract_tl_data(new_tl_lines);
 
   if (new_tl_data.length === 0) {
-    vscode.window.showInformationMessage(
-      "上書きするバトルTLがありませんでした。"
-    );
+    vscode.window.showInformationMessage("上書きするバトルTLがありませんでした。");
     return old_tl;
   }
 
@@ -171,9 +165,7 @@ function convert_battle_tl(battle_tl: string) {
   let char_infos: string[][] = [];
   for (let line of battle_tl.split(/\r\n|\n/)) {
     let time_matchs = line.match(/^0[01]:\d{2}/);
-    let char_info_match = line.match(
-      /^(\S{1,}) ★(\d) Lv(\d{1,}) RANK(\d{2,})$/
-    );
+    let char_info_match = line.match(/^(\S{1,}) ★(\d) Lv(\d{1,}) RANK(\d{2,})$/);
     let damage_match = line.match(/^(\d{1,})ダメージ$/);
 
     if (time_matchs) {
@@ -199,8 +191,7 @@ function convert_battle_tl(battle_tl: string) {
       now_time = time_matchs[0].slice(1);
     } else if (char_info_match) {
       let char_name = translate_to_nick(char_info_match[1]);
-      max_char_length =
-        char_name.length > max_char_length ? char_name.length : max_char_length;
+      max_char_length = char_name.length > max_char_length ? char_name.length : max_char_length;
       char_infos.push([char_name, char_info_match[2], char_info_match[4]]);
     } else if (damage_match) {
       result += damage_match[1].slice(0, -4) + "万";
