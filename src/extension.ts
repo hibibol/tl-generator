@@ -74,16 +74,12 @@ async function create_carry_over_tl_file() {
 
   let all_range_data = utils.get_all_range_data(editor);
   let new_tl = create_carry_over_tl(all_range_data.text, Number(carry_over_time_str));
-  let name = editor.document.fileName.split("/").pop();
+  let name = editor.document.fileName.split(/\\|\//).pop();
   if (name) {
     let new_name = name.split(".")[0] + "_持ち越し" + carry_over_time_str + "秒.tl";
     let new_file_uri = vscode.Uri.joinPath(editor.document.uri, "..", new_name);
-    vscode.window.showInformationMessage(
-      "editor.document.uri: " + editor.document.uri + "\nnew_file_uri: " + new_file_uri
-    );
-    vscode.workspace.fs.writeFile(new_file_uri, new TextEncoder().encode(new_tl)).then((_) => {
-      vscode.commands.executeCommand("vscode.open", new_file_uri);
-    });
+    await vscode.workspace.fs.writeFile(new_file_uri, new TextEncoder().encode(new_tl));
+    vscode.commands.executeCommand("vscode.open", new_file_uri);
   } else {
     vscode.window.showErrorMessage("エラーが発生しました");
   }
